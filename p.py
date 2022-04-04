@@ -13,7 +13,7 @@ def usage():
     print('''Usage: ./p.py -o -d -r --libc
     Requred args:
     -o Path to a local executable.
-    -r Connect to IP:PORT if -o arg not given.
+    -r Connect to IP:PORT if arg -o not given.
     Optimal args:
     -d Debug.
     --libc Path to a specific libc''')
@@ -28,6 +28,7 @@ def getarg(argv):
         for opt, arg in opts:
             if opt in ('-h', '--help'):
                 usage()
+                sys.exit(2)
             elif opt in '-d':
                 context.log_level = 'debug'
 
