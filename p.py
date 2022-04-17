@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 # -*- coding: UTF-8 -*-
 
 from pwn import *
@@ -17,8 +18,9 @@ args = parser.parse_args()
 if __name__ == "__main__":
     binary = args.o
     remote_addr = args.r
-    debug = args.v
     libc = args.libc
+    if args.v == True:
+        context.log_level='debug'
     if not binary and not remote_addr:
         parser.print_usage()
         exit()
