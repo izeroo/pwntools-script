@@ -15,7 +15,7 @@ group.add_argument("-o", help="path to an elf file.",  metavar="<path to file>")
 group.add_argument("-r", help="address of an remote machine.", metavar="<ip:port>")
 parser.add_argument("-v", help="debug log level, default level is error.", action="store_true")
 parser.add_argument("-g", help="start gdb to debug", action="store_true")
-parser.add_argument("-b", help="breakpoint", metavar="main | 0x40115d")
+parser.add_argument("-b", help="breakpoint", metavar="<*main+123 | 0x40115d>")
 parser.add_argument("--libc", help="specify the libc to preload", metavar="<path to file>")
 
 # resolve args
