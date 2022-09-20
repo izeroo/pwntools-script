@@ -15,8 +15,8 @@ group.add_argument("-o", help="path to an elf file.",  metavar="<path to file>")
 group.add_argument("-r", help="address of an remote machine.", metavar="<ip:port>")
 parser.add_argument("-v", help="debug log level, default level is error.", action="store_true")
 parser.add_argument("-g", help="start gdb to debug", action="store_true")
-parser.add_argument("-b", help="breakpoint", metavar="<*main+123 | 0x40115d>")
-parser.add_argument("--libc", help="specify the libc to preload", metavar="<path to file>")
+parser.add_argument("-b", help="breakpoint. e.g. : *main+123 | 0x40115d", metavar="<breakpoint>")
+parser.add_argument("-l", help="specify which libc to preload", metavar="<path to file>")
 
 # resolve args
 args = parser.parse_args()
@@ -25,7 +25,7 @@ gdb_enable = args.g
 breakpoint = args.b
 elf_name = args.o
 remote_addr = args.r
-libc = args.libc
+libc = args.l
 
 # error
 if not elf_name and not remote_addr:
